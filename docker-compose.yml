@@ -1,0 +1,16 @@
+
+version: '2'
+
+services:
+  general-fires-data-task:
+    image: 'terrabrasilis/general-fires-data-task-main:v1.2.2'
+    container_name: fires-data-task
+    restart: always
+    volumes:
+      - '/data/fires/raster:/usr/local/data'
+    networks:
+      - proxy_default
+
+networks:
+  proxy_default:
+    external: true
