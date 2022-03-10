@@ -2,3 +2,4 @@
 **/gsconfig
 **/data
 **/*.log
+venv/
