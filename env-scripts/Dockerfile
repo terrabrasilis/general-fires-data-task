@@ -38,9 +38,7 @@ ENV SCRIPT_DIR $INSTALL_PATH/scripts-shell
 
 # create directories
 RUN mkdir -p ${SHARED_DIR} \
-    && mkdir -p ${SCRIPT_DIR} \
-    && mkdir -p ${SHARED_DIR}/logs \
-    && touch ${SHARED_DIR}/logs/exec_daily.log
+    && mkdir -p ${SCRIPT_DIR}
 
 # INSTALL SCRIPTS
 # ------------------------------------------------------

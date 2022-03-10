@@ -3,14 +3,14 @@ version: '2'
 
 services:
   general-fires-data-task:
-    image: 'terrabrasilis/general-fires-data-task-main:v1.2.2'
+    image: 'terrabrasilis/general-fires-data-task-main:v1.0.0'
     container_name: fires-data-task
     restart: always
     volumes:
-      - '/data/fires/raster:/usr/local/data'
+      - '/home/andre/Dados/homeAndre/Projects/workspace-terrabrasilis2.0/general-fires-data-task/data:/usr/local/data'
     networks:
-      - proxy_default
+      - workspace-docker_default
 
 networks:
-  proxy_default:
+  workspace-docker_default:
     external: true
