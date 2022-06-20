@@ -97,7 +97,7 @@ class DownloadWFS:
     return start_date, end_date
 
   def __buildBaseURL(self):
-    host="queimadas.dgi.inpe.br/queimadas"
+    host="queimadas.dgi.inpe.br"
     schema="https"
     url="{0}://{1}/geoserver/{2}/{3}/wfs".format(schema,host,self.WORKSPACE_NAME,self.LAYER_NAME)
     return url
