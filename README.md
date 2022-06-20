@@ -1,5 +1,7 @@
 ## Preparation of fire focuses data
 
+***Used in AMS, but not limited to.**
+
 Automation or semi-automation to read data of fire focuses from geoservice of Queimadas portal and import into database in TerraBrasilis infrastructur.
 
 The expected periodicity is daily for the acquisition of new data.
