@@ -6,7 +6,8 @@
 #   docker run -d --rm --name terrabrasilis_fires_scripts -v $PWD:/logs -v $PWD:/data/files terrabrasilis/general-fires-data-task:vx.y
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
-FROM osgeo/gdal:ubuntu-small-3.2.0
+#FROM osgeo/gdal:ubuntu-small-3.2.0
+FROM ubuntu:20.04
 
 ARG VERSION=x.y
 ENV VERSION=$VERSION
@@ -20,7 +21,9 @@ description="Scripts for daily get data of fire focuses."
 #-------------Application Specific Stuff ----------------------------------------------------
 
 RUN apt-get -o Acquire::ForceIPv4=true update \
-    && apt-get install -y \
+    && DEBIAN_FRONTEND=noninteractive \
+    TZ=America/Sao_Paulo \
+    apt-get install -y \
     cron \
     python3-pip \
     postgis \
