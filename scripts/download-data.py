@@ -31,7 +31,7 @@ class DownloadWFS:
     Second parameter: password, The password value used to authentication on the server.
     
     To change the predefined settings, inside the constructor, edit the
-    parameter values ​​in accordance with the respective notes.
+    parameter values in accordance with the respective notes.
     """
 
   def __init__(self, dir=None, user=None, password=None):
@@ -107,7 +107,7 @@ class DownloadWFS:
     Building the query string to call the WFS service for focuses of fire.
 
     The parameter: OUTPUTFORMAT, the output format for the WFS GetFeature operation described
-    in the AllowedValues ​​section in the capabilities document.
+    in the AllowedValues section in the capabilities document.
     """
     # WFS parameters
     SERVICE="WFS"
