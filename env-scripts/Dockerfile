@@ -38,16 +38,18 @@ ENV SCRIPT_DIR $INSTALL_PATH/scripts-shell
 RUN mkdir -p ${SHARED_DIR} \
     && mkdir -p ${SCRIPT_DIR}
 
-# INSTALL SCRIPTS
+# Install environment scripts
 # ------------------------------------------------------
-COPY scripts/ $SCRIPT_DIR/
 ADD env-scripts/exec_daily.sh $INSTALL_PATH/
 ADD env-scripts/daily.cron /etc/cron.d/daily-cron
 ADD env-scripts/docker-entrypoint.sh $INSTALL_PATH/bin/docker-entrypoint.sh
 ADD env-scripts/requirements.txt $INSTALL_PATH/
+RUN pip3 install -r $INSTALL_PATH/requirements.txt
 
-RUN pip3 install -r $INSTALL_PATH/requirements.txt \
-    && chmod +x $SCRIPT_DIR/*.sh \
+# Install main scripts
+# ------------------------------------------------------
+COPY scripts/ $SCRIPT_DIR/
+RUN chmod +x $SCRIPT_DIR/*.sh \
     && chmod +x $INSTALL_PATH/*.sh \
     && chmod 0644 /etc/cron.d/daily-cron \
     && crontab -l | { cat; cat /etc/cron.d/daily-cron; } | crontab - \
