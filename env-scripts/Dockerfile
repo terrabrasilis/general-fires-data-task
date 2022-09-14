@@ -6,15 +6,10 @@
 #   docker run -d --rm --name terrabrasilis_fires_scripts -v $PWD:/logs -v $PWD:/data/files terrabrasilis/general-fires-data-task:vx.y
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
-#FROM osgeo/gdal:ubuntu-small-3.2.0
 FROM ubuntu:20.04
-
-ARG VERSION=x.y
-ENV VERSION=$VERSION
 
 LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
 br.inpe.dpi.terrabrasilis="script-tasks" \
-version=${VERSION} \
 author="Andre Carvalho" \
 author.email="andre.carvalho@inpe.br" \
 description="Scripts for daily get data of fire focuses."
