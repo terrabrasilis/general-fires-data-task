@@ -75,6 +75,9 @@ then
     # copy new data to output table
     $PG_BIN/psql $PG_CON -t -c "$INSERT"
 
+    # update biome information for new data into output table
+    $PG_BIN/psql $PG_CON -t -c "$UPDATE"
+
     # drop month table
     $PG_BIN/psql $PG_CON -t -c "$DROP_DAILY_TABLE"
   fi
