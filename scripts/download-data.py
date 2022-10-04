@@ -158,7 +158,7 @@ class DownloadWFS:
 
     XML=self.__xmlRequest(url)
 
-    if '{http://www.opengis.net/wfs/2.0}WFS_Capabilities'==XML.tag:
+    if XML is not None and '{http://www.opengis.net/wfs/2.0}WFS_Capabilities'==XML.tag:
       for p in XML.findall(".//{http://www.opengis.net/ows/1.1}Operation/[@name='GetFeature']"):
         dv=p.find(".//{http://www.opengis.net/ows/1.1}Constraint/[@name='CountDefault']")
         serverLimit=dv.find('.//{http://www.opengis.net/ows/1.1}DefaultValue').text
@@ -173,8 +173,11 @@ class DownloadWFS:
     url="{0}&{1}".format(url,"resultType=hits")
     numberMatched=0
     XML=self.__xmlRequest(url)
-    if '{http://www.opengis.net/wfs/2.0}FeatureCollection'==XML.tag:
+    if XML is not None and '{http://www.opengis.net/wfs/2.0}FeatureCollection'==XML.tag:
       numberMatched=XML.find('[@numberMatched]').get('numberMatched')
+    else:
+      print("Failed to count maximum results for current filter. If the number found is 0, it will exit.")
+      print("numberMatched:"+str(numberMatched))
 
     return int(numberMatched)
 
