@@ -10,6 +10,10 @@ numberMatched=0
 # verify if has new data. If yes, load to env vars the START_DATE, END_DATE and numberMatched
 if [[ -f "$DATA_TARGET/acquisition_data_control" ]];
 then
+
+  # drop temporary table
+  $PG_BIN/psql $PG_CON -t -c "$DROP_TMP_TABLE"
+
   source "$DATA_TARGET/acquisition_data_control"
   INSERT_INFOS="INSERT INTO public.acquisition_data_control(start_date, end_date, num_rows, origin_data) "
   INSERT_INFOS=$INSERT_INFOS"VALUES ('$START_DATE', '$END_DATE', $numberMatched,'$TARGET');"
@@ -75,11 +79,9 @@ then
     # copy new data to output table
     $PG_BIN/psql $PG_CON -t -c "$INSERT"
 
-    # update biome information for new data into output table
+    # update biome information for new data into output table 
     $PG_BIN/psql $PG_CON -t -c "$UPDATE"
 
-    # drop month table
-    $PG_BIN/psql $PG_CON -t -c "$DROP_DAILY_TABLE"
   fi
 else
   echo "No have data for $TARGET" >> $LOGFILE
