@@ -6,6 +6,8 @@ Automation or semi-automation to read data of fire focuses from geoservice of Qu
 
 The expected periodicity is daily for the acquisition of new data.
 
+Taking all the data of active fires from BR and executing an UPDATE routine to change the name of the old biome to the new biome.
+
 ## Configurations
 
 There are three configuration files and a control table to prepare the execution environment, as follows:
