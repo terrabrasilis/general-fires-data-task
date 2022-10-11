@@ -33,55 +33,59 @@ then
     echo "The previous data on the control record are:" >> $LOGFILE
     echo "START_DATE=$START_DATE, END_DATE=$END_DATE, numberMatched=$numberMatched" >> $LOGFILE
   else
-    echo "The data will now be imported" >> $LOGFILE
 
-    # to control the import shape mode
-    CREATE_TABLE="YES"
-    for ZIP_FILE in `ls $DATA_TARGET/*${START_DATE}*${END_DATE}*.zip | awk {'print $1'}`
-    do
-      FILE_NAME=`basename $ZIP_FILE`
+    if [ "$(ls -1d $DATA_TARGET/*${START_DATE}*${END_DATE}*.zip 2>/dev/null | wc -l)" -eq 1 ];
+    then
+      echo "The data will now be imported" >> $LOGFILE
 
-      unzip -o -j "$ZIP_FILE" -d "$DATA_TARGET"
-
-      for SHP_NAME in `ls $DATA_TARGET/*.shp | awk {'print $1'}`
+      # to control the import shape mode
+      CREATE_TABLE="YES"
+      for ZIP_FILE in `ls $DATA_TARGET/*${START_DATE}*${END_DATE}*.zip | awk {'print $1'}`
       do
-        SHP_NAME=`basename $SHP_NAME`
-        SHP_NAME=`echo $SHP_NAME | cut -d "." -f 1`
+        FILE_NAME=`basename $ZIP_FILE`
 
-        # force the same projection used to download the data (Geography/SIRGAS2000)
-        EPSG="4674"
+        unzip -o -j "$ZIP_FILE" -d "$DATA_TARGET"
 
-        # If table exists change command to append mode
-        if [[ "$CREATE_TABLE" = "YES" ]]; then
-            SHP2PGSQL_OPTIONS="-c -s $EPSG:4674 -W 'LATIN1' -g geometries"
-            CREATE_TABLE="NO"
-        else
-            SHP2PGSQL_OPTIONS="-a -s $EPSG:4674 -W 'LATIN1' -g geometries"
-        fi
+        for SHP_NAME in `ls $DATA_TARGET/*.shp | awk {'print $1'}`
+        do
+          SHP_NAME=`basename $SHP_NAME`
+          SHP_NAME=`echo $SHP_NAME | cut -d "." -f 1`
 
-        # import shapefiles
-        if $PG_BIN/shp2pgsql $SHP2PGSQL_OPTIONS $DATA_TARGET/$SHP_NAME $TARGET | $PG_BIN/psql $PG_CON
-        then
-            echo "Import ($FILE_NAME) ... OK" >> $LOGFILE
-            rm $DATA_TARGET/$SHP_NAME.{dbf,prj,shp,shx,cst}
-            rm $DATA_TARGET/"wfsrequest.txt"
-        else
-            echo "Import ($FILE_NAME) ... FAIL" >> $LOGFILE
-            exit
-        fi
+          # force the same projection used to download the data (Geography/SIRGAS2000)
+          EPSG="4674"
+
+          # If table exists change command to append mode
+          if [[ "$CREATE_TABLE" = "YES" ]]; then
+              SHP2PGSQL_OPTIONS="-c -s $EPSG:4674 -W 'LATIN1' -g geometries"
+              CREATE_TABLE="NO"
+          else
+              SHP2PGSQL_OPTIONS="-a -s $EPSG:4674 -W 'LATIN1' -g geometries"
+          fi
+
+          # import shapefiles
+          if $PG_BIN/shp2pgsql $SHP2PGSQL_OPTIONS $DATA_TARGET/$SHP_NAME $TARGET | $PG_BIN/psql $PG_CON
+          then
+              echo "Import ($FILE_NAME) ... OK" >> $LOGFILE
+              rm $DATA_TARGET/$SHP_NAME.{dbf,prj,shp,shx,cst}
+              rm $DATA_TARGET/"wfsrequest.txt"
+          else
+              echo "Import ($FILE_NAME) ... FAIL" >> $LOGFILE
+              exit
+          fi
+        done
       done
-    done
-    # If the execution arrives here, all the data has been imported. 
-    $PG_BIN/psql $PG_CON -t -c "$INSERT_INFOS"
-    rm "$DATA_TARGET/acquisition_data_control"
+      # If the execution arrives here, all the data has been imported. 
+      $PG_BIN/psql $PG_CON -t -c "$INSERT_INFOS"
+      
+      # copy new data to output table
+      $PG_BIN/psql $PG_CON -t -c "$INSERT"
 
-    # copy new data to output table
-    $PG_BIN/psql $PG_CON -t -c "$INSERT"
+      # update biome information for new data into output table 
+      $PG_BIN/psql $PG_CON -t -c "$UPDATE"
 
-    # update biome information for new data into output table 
-    $PG_BIN/psql $PG_CON -t -c "$UPDATE"
-
-  fi
+    fi;# end of shapefile test
+  fi;# end numberMatched==row_count
+  rm "$DATA_TARGET/acquisition_data_control"
 else
   echo "No have data for $TARGET" >> $LOGFILE
-fi
+fi;
