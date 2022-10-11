@@ -198,7 +198,7 @@ class DownloadWFS:
     count=sl
     # pagination iteraction
     while(startIndex<rr):
-      paginationParams="&count={0}&sortBy={1}&startIndex={2}".format(count,sortBy,startIndex)
+      paginationParams="count={0}&sortBy={1}&startIndex={2}".format(count,sortBy,startIndex)
       self.__download(paginationParams,pagNumber)
       startIndex=startIndex+count
       pagNumber=pagNumber+1
