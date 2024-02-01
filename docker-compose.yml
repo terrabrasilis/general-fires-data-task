@@ -3,14 +3,17 @@ version: '2'
 
 services:
   general-fires-data-task:
-    image: 'terrabrasilis/general-fires-data-task-main:v1.0.0'
+    image: 'terrabrasilis/general-fires-data-task-main:v1.2.0'
     container_name: fires-data-task
     restart: always
     volumes:
       - '/home/andre/Dados/homeAndre/Projects/workspace-terrabrasilis2.0/general-fires-data-task/data:/usr/local/data'
+    environment:
+        GEOSERVER_BASE_URL: https://terrabrasilis.dpi.inpe.br
+        GEOSERVER_BASE_PATH: queimadas/geoserver
     networks:
-      - workspace-docker_default
+      - proxy_default
 
 networks:
-  workspace-docker_default:
+  proxy_default:
     external: true

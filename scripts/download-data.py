@@ -50,6 +50,10 @@ class DownloadWFS:
     self.DIR=dir if dir else os.path.realpath(os.path.dirname(__file__))
     self.DIR=os.getenv("DATA_DIR", self.DIR)
     self.PREVIOUS_DATE=os.getenv("PREVIOUS_DATE")
+
+    self.GEOSERVER_BASE_URL=os.getenv("GEOSERVER_BASE_URL", "https://terrabrasilis.dpi.inpe.br")
+    self.GEOSERVER_BASE_PATH=os.getenv("GEOSERVER_BASE_PATH", "queimadas/geoserver")
+
     self.user=user
     self.password=password
     # define start and end date
@@ -97,10 +101,10 @@ class DownloadWFS:
     return start_date, end_date
 
   def __buildBaseURL(self):
-    host="terrabrasilis.dpi.inpe.br/queimadas"
-    schema="http"
-    url="{0}://{1}/geoserver/{2}/{3}/wfs".format(schema,host,self.WORKSPACE_NAME,self.LAYER_NAME)
-    return url
+    gsh = self.GEOSERVER_BASE_URL.split('://')
+    schema=gsh[0]
+    host=gsh[1]
+    return "{0}://{1}/{2}/{3}/{4}/wfs".format(schema,host,self.GEOSERVER_BASE_PATH,self.WORKSPACE_NAME,self.LAYER_NAME)
 
   def __buildQueryString(self, OUTPUTFORMAT=None):
     """
