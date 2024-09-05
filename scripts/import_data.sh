@@ -16,9 +16,10 @@ then
 
   source "$DATA_TARGET/acquisition_data_control"
   INSERT_INFOS="INSERT INTO public.acquisition_data_control(start_date, end_date, num_rows, origin_data) "
-  INSERT_INFOS=$INSERT_INFOS"VALUES ('$START_DATE', '$END_DATE', $numberMatched,'$TARGET');"
-  CHECK_DATA="SELECT num_rows FROM public.acquisition_data_control WHERE start_date='$START_DATE' AND end_date='$END_DATE' AND origin_data='$TARGET'"
+  INSERT_INFOS="${INSERT_INFOS} VALUES ('$START_DATE', '$END_DATE', $numberMatched,'$TARGET');"
 
+  CHECK_DATA="SELECT num_rows FROM public.acquisition_data_control "
+  CHECK_DATA="${CHECK_DATA} WHERE start_date='$START_DATE' AND end_date='$END_DATE' AND origin_data='$TARGET'"
   # obtain the number of rows from the previous import process, if any
   NUM_ROWS=($($PG_BIN/psql $PG_CON -t -c "$CHECK_DATA"))
 
@@ -33,8 +34,8 @@ then
     echo "The previous data on the control record are:" >> $LOGFILE
     echo "START_DATE=$START_DATE, END_DATE=$END_DATE, numberMatched=$numberMatched" >> $LOGFILE
   else
-
-    if [ "$(ls -1d $DATA_TARGET/*${START_DATE}*${END_DATE}*.zip 2>/dev/null | wc -l)" -eq 1 ];
+    # Do we have one or more files for this period?
+    if [ "$(ls -1d $DATA_TARGET/*${START_DATE}*${END_DATE}*.zip 2>/dev/null | wc -l)" -ge 1 ];
     then
       echo "The data will now be imported" >> $LOGFILE
 
@@ -83,8 +84,8 @@ then
       # update biome information for new data into output table 
       $PG_BIN/psql $PG_CON -t -c "$UPDATE"
 
-    fi;# end of shapefile test
-  fi;# end numberMatched==row_count
+    fi; # end of shapefile test
+  fi; # end numberMatched==num_rows
   rm "$DATA_TARGET/acquisition_data_control"
 else
   echo "No have data for $TARGET" >> $LOGFILE
