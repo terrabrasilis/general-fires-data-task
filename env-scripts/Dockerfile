@@ -34,6 +34,10 @@ ENV SHARED_DIR $INSTALL_PATH/data
 # the scripts directory
 ENV SCRIPT_DIR $INSTALL_PATH/scripts-shell
 
+# used inside container to read the config files from default location
+# /usr/local/data/config
+ENV DOCKER_ENV True
+
 # create directories
 RUN mkdir -p ${SHARED_DIR} \
     && mkdir -p ${SCRIPT_DIR}
