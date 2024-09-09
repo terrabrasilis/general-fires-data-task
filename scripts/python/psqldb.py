@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 import os
 import psycopg2
-from common_config import ConfigLoader
+from python.config_loader import ConfigLoader
 
 class ConnectionError(BaseException):
-    """Exception raised for errors in the DB connection.
+    """
+    Exception raised for errors in the DB connection.
+
     Attributes:
         expression -- input expression in which the error occurred
         message -- explanation of the error
@@ -14,7 +16,9 @@ class ConnectionError(BaseException):
         self.message = message
 
 class QueryError(BaseException):
-    """Exception raised for errors in the DB Queries.
+    """
+    Exception raised for errors in the DB Queries.
+    
     Attributes:
         expression -- input expression in which the error occurred
         message -- explanation of the error
@@ -30,7 +34,7 @@ class PsqlDB:
 
     def __init__(self, config_path, filename, section):
         """
-    Constructor
+        Constructor
         To provide the configuration parameters to Postgres service, are two alternatives.
         You can mix over this options.
         
@@ -50,16 +54,9 @@ class PsqlDB:
         To support the secrets from swarm mode, you can set the user and password to Geoserver:
             - POSTGRES_USER_FILE, user, the location of secret file on memory in runtime;
             - POSTGRES_PASS_FILE, password, the location of secret file on memory in runtime;
-    """
+        """
         self.conn = None
         self.cur = None
-
-        # read connection parameters
-        self.db_user=self.params["user"] if self.params["user"] else os.getenv("POSTGRES_USER", "postgres")
-        self.db_pass=self.params["password"] if self.params["password"] else os.getenv("POSTGRES_PASS", "postgres")
-        self.db_name=self.params["dbname"] if self.params["dbname"] else os.getenv("POSTGRES_DBNAME", "postgres")
-        self.db_host=self.params["host"] if self.params["host"] else os.getenv("POSTGRES_HOST", "localhost")
-        self.db_port=self.params["port"] if self.params["port"] else os.getenv("POSTGRES_PORT", 5432)
 
         try:
             conf = ConfigLoader(config_path, filename, section)
@@ -73,6 +70,13 @@ class PsqlDB:
                 self.db_pass = open(self.db_pass, 'r').read()
         except Exception as configError:
             raise configError
+        
+        # read connection parameters
+        self.db_user=self.params["user"] if self.params["user"] else os.getenv("POSTGRES_USER", "postgres")
+        self.db_pass=self.params["password"] if self.params["password"] else os.getenv("POSTGRES_PASS", "postgres")
+        self.db_name=self.params["dbname"] if self.params["dbname"] else os.getenv("POSTGRES_DBNAME", "postgres")
+        self.db_host=self.params["host"] if self.params["host"] else os.getenv("POSTGRES_HOST", "localhost")
+        self.db_port=self.params["port"] if self.params["port"] else os.getenv("POSTGRES_PORT", 5432)
 
     def getDBParameters(self):
         """
@@ -91,7 +95,7 @@ class PsqlDB:
     def connect(self):
         try:
             # connect to the PostgreSQL server
-            str_conn=f"dbname={self.params["dbname"]} user={self.db_user} password={self.db_pass} host={self.params["host"]} port={self.params["port"]}"
+            str_conn=f"dbname={self.db_name} user={self.db_user} password={self.db_pass} host={self.db_host} port={self.db_port}"
             self.conn = psycopg2.connect(str_conn)
             self.cur = self.conn.cursor()
         except (Exception, psycopg2.DatabaseError) as error:

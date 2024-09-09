@@ -10,7 +10,7 @@ Usage:
 import requests, os, io
 from requests.auth import HTTPBasicAuth
 from xml.etree import ElementTree as xmlTree
-from common_config import ConfigLoader
+from python.config_loader import ConfigLoader
 
 """
     WFS client with basic functions.
@@ -61,6 +61,7 @@ class WFS:
             self.GEOSERVER_BASE_PATH=self.params["geoserver_base_path"] if self.params["geoserver_base_path"] else os.getenv("GEOSERVER_BASE_PATH", "queimadas/geoserver")
             self.WORKSPACE_NAME=self.params["workspace"] if self.params["workspace"] else os.getenv("WORKSPACE_NAME", "terrabrasilis")
             self.LAYER_NAME=self.params["layer"] if self.params["layer"] else os.getenv("LAYER_NAME", "focos_br_ref_2016")
+            self.DEFAULT_EPSG=self.params["default_epsg"] if self.params["default_epsg"] else os.getenv("DEFAULT_EPSG", "4674")
             self.CQL_DATE_ATTRIBUTE=self.params["date_attribute"] if self.params["date_attribute"] else os.getenv("DATE_ATTRIBUTE", "datahora")
             self.SORT_ATTRIBUTE=self.params["sort_attribute"] if self.params["sort_attribute"] else os.getenv("SORT_ATTRIBUTE", "fid")
             self.GEOSERVER_USER=self.params["user"] if self.params["user"] else os.getenv("GEOSERVER_USER", "admin")
@@ -104,7 +105,7 @@ class WFS:
         OUTPUTFORMAT=("SHAPE-ZIP" if not OUTPUTFORMAT else OUTPUTFORMAT)
         exceptions="text/xml"
         # define the output projection. We use the layer default projection. (Geography/SIRGAS2000)
-        srsName="EPSG:4674"
+        srsName=self.getDefaultEPSG()
         # the layer definition
         TYPENAME=self.LAYER_NAME  #{0}:{1}".format(self.WORKSPACE_NAME,self.LAYER_NAME)
 
@@ -164,6 +165,9 @@ class WFS:
         else:
             print("Download fail with HTTP Error: {0}".format(response.status_code))
 
+    def getDefaultEPSG(self):
+        return f"EPSG:{self.DEFAULT_EPSG}"
+        
     def setPeriod(self, start_date, end_date):
         # used to filter data
         self.CQL_START_DATE=start_date
@@ -221,6 +225,6 @@ class WFS:
             startIndex=startIndex+count
             pagNumber=pagNumber+1
         
-        return rr
+        return rr, self.OUTPUT_FILENAME, pagNumber
 
 # end of class

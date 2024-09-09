@@ -1,5 +1,4 @@
-**/pgconfig
-**/gsconfig
 **/data
 **/*.log
+**/*.pyc
 venv/

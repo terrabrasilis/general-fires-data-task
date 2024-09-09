@@ -7,8 +7,8 @@ Usage:
     Used to find the previous uncompleted imported data.
 """
 import os
-from scripts.python.psqldb import PsqlDB
-from scripts.python.wfs import WFS
+from python.psqldb import PsqlDB
+from python.wfs import WFS
 
 """
     The Data Checker is used to verify that previously imported data is complete.
@@ -35,7 +35,8 @@ class DataChecker:
         """
         Get from the database log the period and number of rows imported for a specified number of days back.
         """
-        check_data="SELECT start_date, end_date, num_rows FROM public.acquisition_data_control "
+        check_data="SELECT id, start_date, end_date, num_rows FROM public.acquisition_data_control "
+        check_data=f"{check_data} WHERE NOT reloaded "
         check_data=f"{check_data} ORDER BY processed_at DESC LIMIT {self.NUMBER_OF_DAYS};"
         
         log=self.db.fetchData(query=check_data)
@@ -66,15 +67,17 @@ class DataChecker:
         rows=self.__getRegistryFromLog()
         for row in rows:
             # prepare the parameters to request the count number of rows for a specific period over the WFS
-            start_date=row[0]['start_date']
-            end_date=row[0]['end_date']
-            imported_num_rows=row[0]['num_rows']
+            id=row[0]
+            start_date=row[1]
+            end_date=row[2]
+            imported_num_rows=row[3]
             # get official number of rows
             official_num_rows=self.__getRegistryFromSource(start_date=start_date,end_date=end_date)
 
             if imported_num_rows<official_num_rows:
                 print("we need reimport data to this period")
                 row={
+                    'id':id,
                     'start_date':start_date,
                     'end_date':end_date,
                     'num_rows':official_num_rows
