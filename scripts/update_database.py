@@ -7,7 +7,7 @@ Usage:
     Used to update the previous uncompleted imported data.
 """
 import sys
-sys.path.insert(0,'../scripts/python')
+sys.path.insert(0,'./python')
 from python.data_checker import DataChecker
 from python.download_data import DownloadData
 from python.import_data import ImportData

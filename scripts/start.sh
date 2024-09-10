@@ -1,6 +1,6 @@
 #!/bin/bash
-# to debug in localhost, enable the following two lines
-SCRIPT_DIR=`pwd`
+# to debug in localhost, enable the following line
+# SCRIPT_DIR=`pwd`
 
 # The data work directory.
 DATA_DIR=$SCRIPT_DIR"/../data"

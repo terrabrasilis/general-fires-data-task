@@ -32,7 +32,7 @@ ENV INSTALL_PATH /usr/local
 # the data directory for put generated files 
 ENV SHARED_DIR $INSTALL_PATH/data
 # the scripts directory
-ENV SCRIPT_DIR $INSTALL_PATH/scripts-shell
+ENV SCRIPT_DIR $INSTALL_PATH/scripts
 
 # used inside container to read the config files from default location
 # /usr/local/data/config
@@ -52,7 +52,7 @@ RUN pip3 install -r $INSTALL_PATH/requirements.txt
 
 # Install main scripts
 # ------------------------------------------------------
-COPY scripts/ $SCRIPT_DIR/
+COPY scripts/ $SCRIPT_DIR/scripts
 RUN chmod +x $SCRIPT_DIR/*.sh \
     && chmod +x $INSTALL_PATH/*.sh \
     && chmod 0644 /etc/cron.d/daily-cron \
