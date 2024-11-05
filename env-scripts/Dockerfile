@@ -52,7 +52,7 @@ RUN pip3 install -r $INSTALL_PATH/requirements.txt
 
 # Install main scripts
 # ------------------------------------------------------
-COPY scripts/ $SCRIPT_DIR/scripts
+COPY scripts/ $SCRIPT_DIR/
 RUN chmod +x $SCRIPT_DIR/*.sh \
     && chmod +x $INSTALL_PATH/*.sh \
     && chmod 0644 /etc/cron.d/daily-cron \
