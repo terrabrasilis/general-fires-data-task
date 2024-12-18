@@ -10,8 +10,9 @@ import os
 import zipfile
 import geopandas as gpd
 from glob import glob
-from sqlalchemy import URL,create_engine
-from python.psqldb import PsqlDB
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
+from tasks.psqldb import PsqlDB
 
 
 class ImportData():

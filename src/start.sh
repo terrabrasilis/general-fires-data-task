@@ -7,6 +7,6 @@ DATA_DIR=$SCRIPT_DIR"/../data"
 export DATA_DIR
 
 # go to the scripts directory
-cd $SCRIPT_DIR
+cd "${SCRIPT_DIR}/tasks"
 # update focuses
 python3 update_database.py

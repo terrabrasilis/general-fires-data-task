@@ -12,8 +12,8 @@ https://gist.github.com/andre-carvalho/45eaf4378fbf91d0514a995a80c69d98
 """
 import os
 from datetime import datetime, timedelta
-from python.psqldb import PsqlDB
-from python.wfs import WFS
+from tasks.psqldb import PsqlDB
+from tasks.wfs import WFS
 
 """
   Used to perform the download of shapefiles using WFS service.
