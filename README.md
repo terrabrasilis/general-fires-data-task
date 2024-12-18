@@ -14,15 +14,30 @@ There are a few possibilities to pass settings to scripts.
 
 The configuration files and a control table to prepare the execution environment, as follows:
 
- - config/gsconfig (settings for GeoServer - Queimadas)
  - config/geoserver.cfg (settings for GeoServer - Queimadas, using by Python scripts)
- - config/pgconfig (database settings to import and process data)
  - config/db.cfg (database settings to import and process data, using by Python scripts)
 
+### Runtime Environment
+
+There are two proposed ways to do this: via Docker or via AirFlow.
+
+#### Docker
+
+For this modality, a Docker image is used, in which all the necessary environment is configured and to which all the scripts are copied. Then, to run it, you can use one of the modes: as a Docker compose stack or directly via Docker CLI.
+
+To build the Docker image, we provide all the necessary code in the "docker-env" directory and a "docker-build.sh" script.
+
+#### AirFlow
+
+As a more recent way, we implemented the code to encapsulate the tasks, already existing python scripts, in order to operate in the Apache AirFlow environment.
+
+This code is located in the "src/airflow" directory and is loaded by AirFlow when this repository is cloned into the special directory called "projects", which exists in the root directory of the volume that the running AirFlow instance is pointing to.
+
+More details about AirFlow configurations are at https://github.com/terrabrasilis/docker-stacks
 
 ### Runtime Settings
 
-Some data such as GeoServer URL must be configured using environment variables in the docker command, in the docker stack definition or in the gsconfig file, in the session below.
+Some data like GeoServer URL can be configured using environment variables in docker command or docker stack definition as per below section.
 
  > Fragment example of docker stack with the expected env vars
 ```
@@ -32,19 +47,6 @@ Some data such as GeoServer URL must be configured using environment variables i
 ```
 
 #### Configuration files details
-
- > Content of gsconfig file
-```txt
-GEOSERVER_BASE_URL="https://terrabrasilis.dpi.inpe.br"
-GEOSERVER_BASE_PATH="queimadas/geoserver"
-WORKSPACE_NAME="terrabrasilis"
-LAYER_NAME="focos"
-DATE_ATTRIBUTE="datahora"
-SORT_ATTRIBUTE="fid"
-GEOSERVER_USER="user to login on geoserver of Queimadas"
-GEOSERVER_PASS="password to login on geoserver of Queimadas"
-```
-*GEOSERVER_BASE_URL and GEOSERVER_BASE_PATH are optional here. It can be provided as env var in the start command, discussed in the "Runtime Settings" section.
 
  > Content of geoserver.cfg file
 ```txt
@@ -59,15 +61,8 @@ user: aGeoserverUser
 password: aGeoserverPassword
 ```
 
- > Content of pgconfig file
-```txt
-user="postgres"
-host="localhost"
-port="5432"
-database="raw_fire_data"
-password="postgres"
-firesoutputtable="focos_aqua_referencia"
-```
+*GEOSERVER_BASE_URL and GEOSERVER_BASE_PATH are optional here. It can be provided as env var in the start command, discussed in the "Runtime Settings" section.
+
 
  > Content of db.cfg file
 ```txt
