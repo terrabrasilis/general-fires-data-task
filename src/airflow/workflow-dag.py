@@ -18,21 +18,21 @@ from base_dag_operators import BaseDagOperators
 DAG_KEY = "general_fires_data"
 venv_path=f"/opt/airflow/venv/inpe/{DAG_KEY}"
 
-# apply 'catchup':False to prevent backfills
+
 default_args = {
-    "start_date": pendulum.datetime(year=2024, month=11, day=17, tz="America/Sao_Paulo"),
     "owner": "airflow",
+    "start_date": pendulum.datetime(year=2025, month=2, day=20, tz="America/Sao_Paulo"),
     "email": ["afa.decarvalho@gmail.com"],
     "email_on_failure": True,
     "email_on_retry": False,
     "retry_delay": timedelta(minutes=5),
     "retries": 0,
-    "catchup": False,
     "dagrun_timeout": timedelta(minutes=1)
 }
 
+# apply 'catchup':False to prevent backfills
 with DAG(
-    DAG_KEY, default_args=default_args, schedule_interval="55 16 * * *"
+    DAG_KEY, catchup=False, max_active_runs=1, schedule_interval="55 16 * * *", default_args=default_args
 ) as dag:
 
     baseDag = BaseDagOperators(venv_path=venv_path, project_dir=project_dir)
