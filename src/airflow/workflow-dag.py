@@ -32,7 +32,7 @@ default_args = {
 
 # apply 'catchup':False to prevent backfills
 with DAG(
-    DAG_KEY, catchup=False, max_active_runs=1, schedule_interval="55 16 * * *", default_args=default_args
+    DAG_KEY, catchup=False, max_active_runs=1, schedule_interval="10 01 * * *", default_args=default_args
 ) as dag:
 
     baseDag = BaseDagOperators(venv_path=venv_path, project_dir=project_dir)
