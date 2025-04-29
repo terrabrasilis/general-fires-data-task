@@ -3,3 +3,4 @@ data/
 venv/
 env-scripts/
 docker-env/
+src/tasks/

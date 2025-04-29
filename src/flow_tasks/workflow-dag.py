@@ -13,11 +13,10 @@ sys.path.append(dag_dir)
 project_dir = str(pathlib.Path(__file__).parent.parent.resolve().absolute())
 sys.path.append(project_dir)
 
-from base_dag_operators import BaseDagOperators
+from fires_dag_operators import BaseDagOperators
 
 DAG_KEY = "general_fires_data"
 venv_path=f"/opt/airflow/venv/inpe/{DAG_KEY}"
-
 
 default_args = {
     "owner": "airflow",
