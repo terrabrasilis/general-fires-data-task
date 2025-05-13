@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 import psycopg2
-from python.config_loader import ConfigLoader
+from tasks.config_loader import ConfigLoader
 
 class ConnectionError(BaseException):
     """

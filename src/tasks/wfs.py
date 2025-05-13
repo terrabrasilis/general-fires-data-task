@@ -10,7 +10,7 @@ Usage:
 import requests, os, io
 from requests.auth import HTTPBasicAuth
 from xml.etree import ElementTree as xmlTree
-from python.config_loader import ConfigLoader
+from tasks.config_loader import ConfigLoader
 
 """
     WFS client with basic functions.

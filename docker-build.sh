@@ -20,7 +20,7 @@ echo " Build new image terrabrasilis/general-fires-data-task-$GIT_BRANCH:$VERSIO
 echo "/######################################################################/"
 echo
 
-docker build $NO_CACHE -t "terrabrasilis/general-fires-data-task-$GIT_BRANCH:$VERSION" --build-arg VERSION="$VERSION" -f env-scripts/Dockerfile .
+docker build $NO_CACHE -t "terrabrasilis/general-fires-data-task-$GIT_BRANCH:$VERSION" --build-arg VERSION="$VERSION" -f docker-env/Dockerfile .
 
 # send to dockerhub
 echo 

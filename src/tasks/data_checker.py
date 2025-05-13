@@ -7,8 +7,8 @@ Usage:
     Used to find the previous uncompleted imported data.
 """
 import os
-from python.psqldb import PsqlDB
-from python.wfs import WFS
+from tasks.psqldb import PsqlDB
+from tasks.wfs import WFS
 
 """
     The Data Checker is used to verify that previously imported data is complete.

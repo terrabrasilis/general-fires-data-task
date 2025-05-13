@@ -1,5 +1,5 @@
 # To build image for this dockerfile use this command:
-#   docker build -t terrabrasilis/general-fires-data-task:vx.y -f env-scripts/Dockerfile --no-cache .
+#   docker build -t terrabrasilis/general-fires-data-task:vx.y -f docker-env/Dockerfile --no-cache .
 #
 # To run without compose and without shell terminal use this command:
 #   docker run -d --rm --name terrabrasilis_fires_scripts terrabrasilis/general-fires-data-task:vx.y
@@ -32,7 +32,7 @@ ENV INSTALL_PATH /usr/local
 # the data directory for put generated files 
 ENV SHARED_DIR $INSTALL_PATH/data
 # the scripts directory
-ENV SCRIPT_DIR $INSTALL_PATH/scripts
+ENV SCRIPT_DIR $INSTALL_PATH/src
 
 # used inside container to read the config files from default location
 # /usr/local/data/config
@@ -44,15 +44,15 @@ RUN mkdir -p ${SHARED_DIR} \
 
 # Install environment scripts
 # ------------------------------------------------------
-ADD env-scripts/exec_daily.sh $INSTALL_PATH/
-ADD env-scripts/daily.cron /etc/cron.d/daily-cron
-ADD env-scripts/docker-entrypoint.sh $INSTALL_PATH/bin/docker-entrypoint.sh
-ADD env-scripts/requirements.txt $INSTALL_PATH/
+ADD docker-env/exec_daily.sh $INSTALL_PATH/
+ADD docker-env/daily.cron /etc/cron.d/daily-cron
+ADD docker-env/docker-entrypoint.sh $INSTALL_PATH/bin/docker-entrypoint.sh
+ADD docker-env/requirements.txt $INSTALL_PATH/
 RUN pip3 install -r $INSTALL_PATH/requirements.txt
 
 # Install main scripts
 # ------------------------------------------------------
-COPY scripts/ $SCRIPT_DIR/
+COPY src/ $SCRIPT_DIR/
 RUN chmod +x $SCRIPT_DIR/*.sh \
     && chmod +x $INSTALL_PATH/*.sh \
     && chmod 0644 /etc/cron.d/daily-cron \

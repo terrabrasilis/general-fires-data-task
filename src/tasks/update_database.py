@@ -6,11 +6,9 @@ Copyright 2024 TerraBrasilis
 Usage:
     Used to update the previous uncompleted imported data.
 """
-import sys
-sys.path.insert(0,'./python')
-from python.data_checker import DataChecker
-from python.download_data import DownloadData
-from python.import_data import ImportData
+from tasks.data_checker import DataChecker
+from tasks.download_data import DownloadData
+from tasks.import_data import ImportData
 
 class UpdateDatabase:
     """
@@ -49,7 +47,3 @@ class UpdateDatabase:
                     file_number+=1
 
 # end class
-
-aTask = UpdateDatabase()
-aTask.updateCurrentData()
-aTask.updateLastData()
