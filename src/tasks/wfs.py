@@ -164,6 +164,8 @@ class WFS:
                 f.write(response.content)
         else:
             print("Download fail with HTTP Error: {0}".format(response.status_code))
+            print(url)
+            raise Exception("Download fail with HTTP Error: {0}".format(response.status_code))
 
     def getDefaultEPSG(self):
         return f"EPSG:{self.DEFAULT_EPSG}"
